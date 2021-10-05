@@ -1,0 +1,38 @@
+//
+//Custom standard function-like MACRO optimized in Arduino-like format.
+//
+////example:
+////	Arduino function		|	Custom function
+////	========================+======================================
+////	pinMode(pin, mode)		|  - PB_OUT(pin) for OUPUT
+////							|  - PB_IN(pin) for INPUT
+////	------------------------+--------------------------------------
+////	digitalWrite(pin,value)	|  - SET_BIT(PORT_OUT,pin) for HIGH
+////							|  - CLR_BIT(PORT_IN,pin) for LOW
+////	------------------------+--------------------------------------
+////	delayMicroseconds(time)	|  _delay_us(time)
+////	delayMilliseconds(time)	|  _delay-ms(time)
+////	----------------------------------------------------------------
+////	+ Delay fuctions are in basic avr libraries <util/delay.h>
+////	+ You can find precautions  using delay functions in https://nongnu.org/avr-libc/user-manual/
+////	+if you use other board change F_CPU below your MCU clock speed
+
+#ifndef ARDU_FUNC
+#define ARDU_FUNC
+
+#include <avr/io.h>
+#include <util/delay.h>
+
+#define SET_BIT(byte, bit) (byte)|=_BV(bit)
+#define CLR_BIT(byte, bit) (byte)&=~_BV(bit)
+#define IS_SET(byte, bit) ((byte)&_BV(bit))>>(bit)
+
+#define PORT_OUT PORTB
+#define PORT_IN PINB
+
+#define PB_OUT(bit) SET_BIT(DDRB,bit)
+#define PB_IN(bit) SET_BIT(DDRB,bit)
+
+#define F_CPU 8000000UL
+
+#endif
